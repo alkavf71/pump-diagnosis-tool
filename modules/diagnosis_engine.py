@@ -348,10 +348,12 @@ def run_complete_diagnosis(input_data: Dict) -> Dict:
     Returns:
         Dict dengan hasil diagnosa lengkap
     """
-    from src.modules.hydraulic_analysis import generate_hydraulic_report
-    from src.modules.electrical_analysis import generate_electrical_report
-    from src.modules.thermal_analysis import generate_thermal_report
-    from src.modules.mechanical_analysis import analyze_mechanical_conditions
+    from modules.hydraulic_analysis import generate_hydraulic_report
+    from modules.electrical_analysis import generate_electrical_report
+    from modules.thermal_analysis import generate_thermal_report
+    from modules.mechanical_analysis import analyze_mechanical_conditions
+    from utils.calculations import calculate_npsha
+    from utils.lookup_tables import DIAGNOSIS_PRIORITY
     
     spec_data = input_data["specification"]
     operational_data = input_data["operational"]
