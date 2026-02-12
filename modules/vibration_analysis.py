@@ -1,8 +1,7 @@
 """Modul untuk analisis data vibrasi"""
 from typing import Dict, List, Tuple
-from src.config import ISO_LIMITS, FAULT_MAPPING
-from src.utils.calculations import get_zone_classification, get_zone_description
-
+from utils.lookup_tables import ISO_10816_3_LIMITS, FAULT_MAPPING
+from utils.calculations import get_zone_classification, get_zone_description
 
 def calculate_average_vibration(vibration_data: Dict) -> Dict:
     """
