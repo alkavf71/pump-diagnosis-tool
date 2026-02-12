@@ -1,7 +1,7 @@
 """Utility functions untuk perhitungan teknis"""
 import math
 from typing import Dict, Tuple
-from src.config import PRODUCT_PROPERTIES, PUMP_SIZE_DEFAULTS
+from utils.lookup_tables import PRODUCT_PROPERTIES, PUMP_SIZE_DEFAULTS, ISO_10816_3_LIMITS
 
 
 def calculate_npsha(
@@ -14,25 +14,16 @@ def calculate_npsha(
     
     Formula: NPSHa = (P_suction + 101.3) / (ρ * g) - P_vapor / (ρ * g)
     Simplified: NPSHa ≈ (P_suction + 101.3) / (9.81 * ρ/1000) - P_vapor_m
-    
-    Args:
-        suction_kpa: Suction pressure (kPa gauge)
-        product_type: Gasoline/Diesel/Avtur/Naphtha
-        temperature: Product temperature (°C), jika None gunakan default
-        
-    Returns:
-        NPSHa dalam meter
     """
     # Get product properties
-    rho = PRODUCT_PROPERTIES[product_type]["density"]  # kg/m³
-    default_temp = PRODUCT_PROPERTIES[product_type]["default_temp"]
+    rho = PRODUCT_PROPERTIES[product_type]["density_kgm3"]
+    default_temp = PRODUCT_PROPERTIES[product_type]["default_temp_c"]
     temp = temperature if temperature is not None else default_temp
     
-    # Estimate vapor pressure (simplified Cox chart approximation)
+    # Estimate vapor pressure
     p_vapor_m = estimate_vapor_pressure(product_type, temp)
     
     # Calculate NPSHa
-    # Convert kPa to m: P(kPa) / (ρ * g) * 1000
     pressure_head = (suction_kpa + 101.3) / (9.81 * rho / 1000)
     npsha = pressure_head - p_vapor_m
     
@@ -42,21 +33,15 @@ def calculate_npsha(
 def estimate_vapor_pressure(product_type: str, temperature: float) -> float:
     """
     Estimasi vapor pressure dalam meter head
-    
-    Approximation based on typical values:
-    - Gasoline: ~0.5-0.8 bar at 30°C
-    - Diesel: ~0.05-0.1 bar at 25°C
-    - Avtur: ~0.2-0.4 bar at 28°C
     """
     vapor_pressure_kpa = {
-        "Gasoline": 50 + (temperature - 20) * 3,   # ~50 kPa at 20°C
-        "Diesel": 5 + (temperature - 20) * 0.5,     # ~5 kPa at 20°C
-        "Avtur": 20 + (temperature - 20) * 1.5,     # ~20 kPa at 20°C
-        "Naphtha": 60 + (temperature - 20) * 4      # ~60 kPa at 20°C
+        "Gasoline": 50 + (temperature - 20) * 3,
+        "Diesel": 5 + (temperature - 20) * 0.5,
+        "Avtur": 20 + (temperature - 20) * 1.5,
+        "Naphtha": 60 + (temperature - 20) * 4
     }
     
-    rho = PRODUCT_PROPERTIES[product_type]["density"]
-    # Convert kPa to meter head: P(kPa) / (ρ * g) * 1000
+    rho = PRODUCT_PROPERTIES[product_type]["density_kgm3"]
     vapor_head_m = vapor_pressure_kpa[product_type] / (9.81 * rho / 1000)
     
     return round(vapor_head_m, 2)
@@ -68,7 +53,7 @@ def calculate_differential_head(
     product_type: str
 ) -> float:
     """Hitung differential head dalam meter"""
-    rho = PRODUCT_PROPERTIES[product_type]["density"]
+    rho = PRODUCT_PROPERTIES[product_type]["density_kgm3"]
     delta_p_kpa = discharge_kpa - suction_kpa
     head_m = delta_p_kpa / (9.81 * rho / 1000)
     return round(head_m, 2)
@@ -114,7 +99,7 @@ def calculate_load_percentage(current_avg: float, fla: float) -> Tuple[float, st
 
 def calculate_flow_ratio(flow_rate: float, pump_size: str) -> Tuple[float, str]:
     """Hitung ratio flow terhadap BEP"""
-    bep_flow = PUMP_SIZE_DEFAULTS[pump_size]["bep_flow"]
+    bep_flow = PUMP_SIZE_DEFAULTS[pump_size]["bep_flow_m3h"]
     ratio = flow_rate / bep_flow
     
     if ratio < 0.6:
@@ -129,9 +114,7 @@ def calculate_flow_ratio(flow_rate: float, pump_size: str) -> Tuple[float, str]:
 
 def get_zone_classification(avr_value: float, foundation_type: str = "rigid") -> str:
     """Klasifikasi zona ISO 10816-3"""
-    from src.config import ISO_LIMITS
-    
-    limits = ISO_LIMITS[foundation_type]
+    limits = ISO_10816_3_LIMITS[foundation_type]
     
     if avr_value <= limits["zone_a_max"]:
         return "A"
