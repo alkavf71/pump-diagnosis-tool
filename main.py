@@ -8,13 +8,14 @@ from datetime import datetime
 
 # Import modules
 from modules.data_input import collect_all_inputs
-from src.modules.diagnosis_engine import run_complete_diagnosis
-from src.modules.report_generator import (
+from modules.diagnosis_engine import run_complete_diagnosis
+from modules.report_generator import (
     display_diagnosis_summary,
     display_detailed_analysis,
     display_action_plan,
     generate_excel_report
 )
+from utils.lookup_tables import PRODUCT_PROPERTIES, PUMP_SIZE_DEFAULTS
 
 # Page configuration
 st.set_page_config(
