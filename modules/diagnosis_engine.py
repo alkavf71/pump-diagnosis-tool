@@ -321,7 +321,7 @@ def generate_action_plan(
     }
 
 
-def run_complete_diagnosis(input_ Dict) -> Dict:
+def run_complete_diagnosis(input_data: Dict) -> Dict:
     """
     Jalankan diagnosa lengkap dari input data
     """
