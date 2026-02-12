@@ -1,6 +1,6 @@
 """Engine diagnosa utama - mengintegrasikan semua analisis"""
-from typing import Dict, List
-from src.config import DIAGNOSIS_PRIORITY
+from typing import Dict
+from utils.lookup_tables import DIAGNOSIS_PRIORITY
 
 
 def prioritize_diagnosis(
@@ -17,15 +17,6 @@ def prioritize_diagnosis(
     2. Electrical (imbalance/overload can damage motor)
     3. Mechanical (true mechanical defects)
     4. Thermal (often symptom, not root cause)
-    
-    Args:
-        hydraulic_report: Laporan analisis hidraulis
-        electrical_report: Laporan analisis listrik
-        mechanical_report: Laporan analisis mechanical
-        thermal_report: Laporan analisis thermal
-        
-    Returns:
-        Dict dengan primary diagnosis & action plan
     """
     # Check each component for issues
     issues = {}
@@ -93,19 +84,11 @@ def prioritize_diagnosis(
 
 def generate_action_plan(
     diagnosis_result: Dict,
-    spec_data: Dict,
-    metadata: Dict
+    spec_ Dict,
+    meta Dict
 ) -> Dict:
     """
     Generate action plan berdasarkan diagnosis
-    
-    Args:
-        diagnosis_result: Hasil dari prioritize_diagnosis
-        spec_data: Data spesifikasi (product_type, dll)
-        metadata: Metadata (pump_tag, location, dll)
-        
-    Returns:
-        Dict dengan action plan terstruktur
     """
     primary = diagnosis_result["primary_diagnosis"]
     primary_type = primary["type"]
@@ -247,7 +230,7 @@ def generate_action_plan(
                     "action": f"Perform {report['primary_fault'].lower()} correction",
                     "timeline": "< 7 days",
                     "pic": "Maintenance Team",
-                    "standard": "API 686" if report['primary_fault'] == 'Misalignment' else "ISO 1940-1"
+                    "standard": "API 686" if "Misalignment" in report['primary_fault'] else "ISO 1940-1"
                 }
             ]
         
@@ -338,21 +321,14 @@ def generate_action_plan(
     }
 
 
-def run_complete_diagnosis(input_data: Dict) -> Dict:
+def run_complete_diagnosis(input_ Dict) -> Dict:
     """
     Jalankan diagnosa lengkap dari input data
-    
-    Args:
-        input_data: Dict dengan semua input dari form
-        
-    Returns:
-        Dict dengan hasil diagnosa lengkap
     """
     from modules.hydraulic_analysis import generate_hydraulic_report
     from modules.electrical_analysis import generate_electrical_report
     from modules.thermal_analysis import generate_thermal_report
     from modules.mechanical_analysis import analyze_mechanical_conditions
-    from utils.lookup_tables import DIAGNOSIS_PRIORITY
     
     spec_data = input_data["specification"]
     operational_data = input_data["operational"]
