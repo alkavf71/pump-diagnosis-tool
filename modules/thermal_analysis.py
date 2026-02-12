@@ -9,14 +9,6 @@ def analyze_thermal_conditions(
 ) -> Dict:
     """
     Analisis kondisi thermal bearing
-    
-    Args:
-        temp_de: Suhu bearing Drive End (°C)
-        temp_nde: Suhu bearing Non-Drive End (°C)
-        ambient_temp: Suhu ambient (°C), default 30°C
-        
-    Returns:
-        Dict dengan hasil analisis thermal
     """
     # Temperature rise above ambient
     rise_de = temp_de - ambient_temp
@@ -93,15 +85,9 @@ def analyze_thermal_conditions(
     }
 
 
-def generate_thermal_report(thermal_data: Dict) -> Dict:
+def generate_thermal_report(thermal_ Dict) -> Dict:
     """
     Generate laporan analisis thermal
-    
-    Args:
-        thermal_data: Dict dengan temp_de, temp_nde
-        
-    Returns:
-        Dict dengan laporan thermal lengkap
     """
     temp_de = thermal_data.get("temp_de", 65.0)
     temp_nde = thermal_data.get("temp_nde", 65.0)
