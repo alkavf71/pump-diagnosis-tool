@@ -5,7 +5,7 @@ from utils.calculations import (
     calculate_differential_head,
     calculate_flow_ratio
 )
-from src.config import PUMP_SIZE_DEFAULTS, PRODUCT_PROPERTIES
+from utils.lookup_tables import PUMP_SIZE_DEFAULTS
 
 
 def analyze_hydraulic_conditions(
@@ -18,21 +18,10 @@ def analyze_hydraulic_conditions(
 ) -> Dict:
     """
     Analisis kondisi hidraulis pompa
-    
-    Args:
-        suction_pressure: Tekanan suction (kPa)
-        discharge_pressure: Tekanan discharge (kPa)
-        flow_rate: Laju alir (m³/h)
-        product_type: Jenis produk
-        pump_size: Ukuran pompa (Small/Medium/Large)
-        temperature: Suhu produk (°C), optional
-        
-    Returns:
-        Dict dengan hasil analisis hidraulis
     """
     # Get pump defaults
-    npshr = PUMP_SIZE_DEFAULTS[pump_size]["npshr"]
-    bep_flow = PUMP_SIZE_DEFAULTS[pump_size]["bep_flow"]
+    npshr = PUMP_SIZE_DEFAULTS[pump_size]["npshr_m"]
+    bep_flow = PUMP_SIZE_DEFAULTS[pump_size]["bep_flow_m3h"]
     
     # Calculate NPSHa
     npsha = calculate_npsha(suction_pressure, product_type, temperature)
@@ -82,18 +71,11 @@ def analyze_hydraulic_conditions(
 
 
 def generate_hydraulic_report(
-    operational_data: Dict,
+    operational_ Dict,
     spec_data: Dict
 ) -> Dict:
     """
     Generate laporan analisis hidraulis
-    
-    Args:
-        operational_data: Dict dengan suction_pressure, discharge_pressure, flow_rate
-        spec_data: Dict dengan product_type, pump_size
-        
-    Returns:
-        Dict dengan laporan hidraulis lengkap
     """
     suction = operational_data.get("suction_pressure", 0.0)
     discharge = operational_data.get("discharge_pressure", 0.0)
