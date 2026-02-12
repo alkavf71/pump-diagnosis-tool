@@ -1,7 +1,7 @@
 """Modul untuk form input data inspector"""
 import streamlit as st
-from typing import Dict, Optional
-from src.config import PRODUCT_PROPERTIES, FAULT_MAPPING
+from typing import Dict
+from utils.lookup_tables import PRODUCT_PROPERTIES, FAULT_MAPPING
 
 
 def render_specification_form() -> Dict:
