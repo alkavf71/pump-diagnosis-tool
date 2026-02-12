@@ -1,11 +1,11 @@
 """Modul untuk analisis data listrik (voltage, current, imbalance)"""
 from typing import Dict
-from src.utils.calculations import (
+from utils.calculations import (
     calculate_voltage_imbalance,
     calculate_current_imbalance,
     calculate_load_percentage
 )
-from src.config import PUMP_SIZE_DEFAULTS
+from utils.lookup_tables import PUMP_SIZE_DEFAULTS
 
 
 def analyze_electrical_conditions(
