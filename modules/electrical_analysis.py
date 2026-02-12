@@ -19,17 +19,9 @@ def analyze_electrical_conditions(
 ) -> Dict:
     """
     Analisis kondisi listrik motor
-    
-    Args:
-        voltage_l1, l2, l3: Tegangan per phase (V)
-        current_l1, l2, l3: Arus per phase (A)
-        pump_size: Ukuran pompa untuk estimasi FLA
-        
-    Returns:
-        Dict dengan hasil analisis listrik
     """
     # Get FLA from pump size
-    fla = PUMP_SIZE_DEFAULTS[pump_size]["fla"]
+    fla = PUMP_SIZE_DEFAULTS[pump_size]["fla_a"]
     
     # Calculate voltage imbalance
     v_imbalance, v_status = calculate_voltage_imbalance(voltage_l1, voltage_l2, voltage_l3)
@@ -109,18 +101,11 @@ def analyze_electrical_conditions(
 
 
 def generate_electrical_report(
-    electrical_data: Dict,
-    spec_data: Dict
+    electrical_ Dict,
+    spec_ Dict
 ) -> Dict:
     """
     Generate laporan analisis listrik
-    
-    Args:
-        electrical_data: Dict dengan voltage & current per phase
-        spec_data: Dict dengan pump_size
-        
-    Returns:
-        Dict dengan laporan listrik lengkap
     """
     v1 = electrical_data.get("voltage_l1", 380.0)
     v2 = electrical_data.get("voltage_l2", 380.0)
