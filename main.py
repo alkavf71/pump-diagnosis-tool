@@ -7,7 +7,7 @@ import pandas as pd
 from datetime import datetime
 
 # Import modules
-from src.modules.data_input import collect_all_inputs
+from modules.data_input import collect_all_inputs
 from src.modules.diagnosis_engine import run_complete_diagnosis
 from src.modules.report_generator import (
     display_diagnosis_summary,
