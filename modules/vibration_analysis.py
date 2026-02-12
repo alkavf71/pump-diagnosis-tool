@@ -1,17 +1,12 @@
 """Modul untuk analisis data vibrasi"""
-from typing import Dict, List, Tuple
+from typing import Dict
 from utils.lookup_tables import ISO_10816_3_LIMITS, FAULT_MAPPING
 from utils.calculations import get_zone_classification, get_zone_description
+
 
 def calculate_average_vibration(vibration_data: Dict) -> Dict:
     """
     Hitung average per arah: Avr = (DE + NDE) / 2
-    
-    Args:
-        vibration_data: Dict dengan keys DE_H, DE_V, DE_A, NDE_H, NDE_V, NDE_A
-        
-    Returns:
-        Dict dengan average per arah + overall max
     """
     directions = ["H", "V", "A"]
     averages = {}
@@ -35,13 +30,6 @@ def calculate_average_vibration(vibration_data: Dict) -> Dict:
 def classify_vibration_zones(averages: Dict, foundation_type: str = "rigid") -> Dict:
     """
     Klasifikasikan zona ISO 10816-3 per arah
-    
-    Args:
-        averages: Dict dengan Avr_H, Avr_V, Avr_A
-        foundation_type: "rigid" atau "flexible"
-        
-    Returns:
-        Dict dengan zona per arah + deskripsi
     """
     zones = {}
     directions = ["H", "V", "A"]
@@ -66,12 +54,6 @@ def classify_vibration_zones(averages: Dict, foundation_type: str = "rigid") -> 
 def identify_fault_indicators(averages: Dict) -> Dict:
     """
     Identifikasi kemungkinan fault berdasarkan arah dominan
-    
-    Args:
-        averages: Dict dengan Avr_H, Avr_V, Avr_A
-        
-    Returns:
-        Dict dengan fault per arah + primary fault
     """
     directions = ["H", "V", "A"]
     faults = {}
@@ -97,16 +79,9 @@ def identify_fault_indicators(averages: Dict) -> Dict:
     return faults
 
 
-def analyze_hf_vibration(vibration_data: Dict, product_type: str) -> Dict:
+def analyze_hf_vibration(vibration_ Dict, product_type: str) -> Dict:
     """
     Analisis high-frequency vibration untuk cavitation & bearing defect
-    
-    Args:
-        vibration_data: Dict dengan HF_5_16kHz dan Demodulation
-        product_type: Jenis produk (untuk threshold adjustment)
-        
-    Returns:
-        Dict dengan hasil analisis HF
     """
     hf_value = vibration_data.get("HF_5_16kHz", 0.0)
     demod_value = vibration_data.get("Demodulation", 0.0)
@@ -136,20 +111,12 @@ def analyze_hf_vibration(vibration_data: Dict, product_type: str) -> Dict:
 
 
 def generate_vibration_report(
-    vibration_data: Dict,
+    vibration_ Dict,
     foundation_type: str = "rigid",
     product_type: str = "Diesel"
 ) -> Dict:
     """
     Generate laporan lengkap analisis vibrasi
-    
-    Args:
-        vibration_data: Data vibrasi lengkap
-        foundation_type: Tipe fondasi
-        product_type: Jenis produk
-        
-    Returns:
-        Dict dengan hasil analisis lengkap
     """
     # Hitung average
     averages = calculate_average_vibration(vibration_data)
