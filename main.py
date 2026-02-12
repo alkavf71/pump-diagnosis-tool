@@ -6,7 +6,7 @@ import streamlit as st
 import pandas as pd
 from datetime import datetime
 
-# Import modules
+# Import modules (tanpa src. prefix)
 from modules.data_input import collect_all_inputs
 from modules.diagnosis_engine import run_complete_diagnosis
 from modules.report_generator import (
@@ -15,7 +15,6 @@ from modules.report_generator import (
     display_action_plan,
     generate_excel_report
 )
-from utils.lookup_tables import PRODUCT_PROPERTIES, PUMP_SIZE_DEFAULTS
 
 # Page configuration
 st.set_page_config(
@@ -125,11 +124,10 @@ def main():
                 st.markdown("#### Download Options")
                 
                 # Excel download
-                excel_buffer = pd.ExcelWriter('/tmp/report.xlsx', engine='openpyxl')
-                excel_df.to_excel(excel_buffer, index=False, sheet_name='Diagnosis Report')
-                excel_buffer.close()
+                excel_file = f"/tmp/pump_diagnosis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+                excel_df.to_excel(excel_file, index=False, sheet_name='Diagnosis Report')
                 
-                with open('/tmp/report.xlsx', 'rb') as f:
+                with open(excel_file, 'rb') as f:
                     st.download_button(
                         label="📥 Download Excel Report",
                         data=f,
@@ -137,8 +135,7 @@ def main():
                         mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                     )
                 
-                # PDF option (placeholder)
-                st.info("📄 PDF report generation coming soon!")
+                st.info("📄 PDF report generation will be added in future update!")
         
         # Compliance statement
         st.markdown("---")
@@ -149,7 +146,7 @@ def main():
         - API 610 12th Ed. (Centrifugal Pumps)
         - ISO 13373-3:2020 (Condition Monitoring)
         - IEC 60034-1 (Rotating Electrical Machines)
-        - Pertamina SOP Asset Integrity No. PI-2023-087
+        - Pertamina SOP Asset Integrity
         """)
 
 
