@@ -1,6 +1,6 @@
 """Modul untuk analisis kondisi mechanical (agregasi dari vibrasi)"""
 from typing import Dict
-from src.modules.vibration_analysis import generate_vibration_report
+from modules.vibration_analysis import generate_vibration_report
 
 
 def analyze_mechanical_conditions(
@@ -11,15 +11,6 @@ def analyze_mechanical_conditions(
 ) -> Dict:
     """
     Analisis kondisi mechanical pompa & motor
-    
-    Args:
-        vibration_driver: Data vibrasi Driver (motor)
-        vibration_driven: Data vibrasi Driven (pump)
-        foundation_type: Tipe fondasi
-        product_type: Jenis produk
-        
-    Returns:
-        Dict dengan hasil analisis mechanical
     """
     # Analyze driver (motor)
     driver_report = generate_vibration_report(
@@ -66,15 +57,15 @@ def analyze_mechanical_conditions(
             f"⚠️ Pump vibration Zone {driven_report['overall_zone']} - check impeller balance & bearing condition"
         )
     
-    if primary_component_report["faults"]["primary_fault"] == "Misalignment":
-        recommendations.append(
-            "🔧 Primary fault: Misalignment - perform laser alignment"
-        )
-    elif primary_component_report["faults"]["primary_fault"] == "Unbalance":
+    if primary_component_report["faults"]["primary_fault"] == "Unbalance (Impeller erosion/fouling)":
         recommendations.append(
             "🔧 Primary fault: Unbalance - perform dynamic balancing"
         )
-    elif primary_component_report["faults"]["primary_fault"] == "Mechanical Looseness / Foundation Issue":
+    elif "Misalignment" in primary_component_report["faults"]["primary_fault"]:
+        recommendations.append(
+            "🔧 Primary fault: Misalignment - perform laser alignment"
+        )
+    elif "Looseness" in primary_component_report["faults"]["primary_fault"]:
         recommendations.append(
             "🔧 Primary fault: Mechanical looseness - check foundation bolts & grouting"
         )
