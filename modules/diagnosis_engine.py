@@ -352,7 +352,6 @@ def run_complete_diagnosis(input_data: Dict) -> Dict:
     from modules.electrical_analysis import generate_electrical_report
     from modules.thermal_analysis import generate_thermal_report
     from modules.mechanical_analysis import analyze_mechanical_conditions
-    from utils.calculations import calculate_npsha
     from utils.lookup_tables import DIAGNOSIS_PRIORITY
     
     spec_data = input_data["specification"]
