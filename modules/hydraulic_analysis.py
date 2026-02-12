@@ -1,6 +1,6 @@
 """Modul untuk analisis data hidraulis (NPSHa, BEP, dll)"""
 from typing import Dict
-from src.utils.calculations import (
+from utils.calculations import (
     calculate_npsha,
     calculate_differential_head,
     calculate_flow_ratio
